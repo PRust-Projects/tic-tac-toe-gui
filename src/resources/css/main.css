@@ -1,0 +1,98 @@
+html {
+	background: white; 
+}
+
+html,
+body {
+  margin: 1% 0%;
+  padding: 0;
+}
+
+h1 {
+	margin-bottom: 0em;
+}
+
+.author {
+	font-weight: 200;
+	font-style: italic;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+}
+
+.center-text {
+	text-align: center;
+}
+
+.grid {
+	background-color: black;
+	margin: 5% auto;
+	padding: 0px;
+	height: 60vw;
+	width: 61vw;
+}
+
+.grid-cell {
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: contain;
+	display: inline-block;
+  	height: 20vw;
+  	width: 20vw;
+  	padding: 0px;
+  	margin: 0px;
+}
+
+.grid-cell-1 {
+	background-image: url(../images/empty.png);
+	margin-right: 1px;
+	margin-bottom: 1px;
+}
+
+.grid-cell-2 {
+	background-image: url(../images/empty.png);
+	margin-right: 1px;
+	margin-bottom: 1px;
+}
+
+.grid-cell-3 {
+	background-image: url(../images/empty.png);
+	margin-right: 0px;
+	margin-bottom: 1px;
+}
+
+.grid-cell-4 {
+	background-image: url(../images/empty.png);
+	margin-right: 1px;
+	margin-bottom: 1px;
+}
+
+.grid-cell-5 {
+	background-image: url(../images/empty.png);
+	margin-right: 1px;
+	margin-bottom: 1px;
+}
+
+.grid-cell-6 {
+	background-image: url(../images/empty.png);
+	margin-right: 0px;
+	margin-bottom: 1px;
+}
+
+.grid-cell-7 {
+	background-image: url(../images/empty.png);
+	margin-right: 1px;
+	margin-bottom: 0px;
+}
+
+.grid-cell-8 {
+	background-image: url(../images/empty.png);
+	margin-right: 1px;
+	margin-bottom: 0px;
+}
+
+.grid-cell-9 {
+	background-image: url(../images/empty.png);
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
