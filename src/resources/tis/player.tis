@@ -1,0 +1,90 @@
+include("utils.tis");
+
+namespace player {
+
+	var playerMove;
+
+	class AbstractPlayer {
+		
+		function this(token) {
+			this.token = token.toUpperCase();
+		}
+
+	}
+
+	class Human: AbstractPlayer {
+
+		function this(token) {
+			super(token);
+		}
+		
+		function addHumanMoveEventListener() {
+			var grid = self.selectAll(".grid-cell");
+			var index = 0;
+			for (var i = 0; i < game.BOARD_HEIGHT * game.BOARD_WIDTH; i++) {
+				var gridCell = grid[i];
+				(:_i:gridCell.onClick = function() {
+					player.playerMove = _i;
+				 })(i);
+			}
+		}
+
+		function removeHumanMoveEventListener() {
+			var grid = self.selectAll(".grid-cell");
+			for (var gridCell in grid) {
+				gridCell.onClick = undefined;
+			}
+		}
+
+		function waitForHumanToMakeMove() {
+			var stateVars = {"calledFunction": false};
+			var outerThis = this;
+			self.timer(100ms, function() {
+				return utils.executeIfNotNull(player.playerMove, function() {
+					var row = player.playerMove / 3;
+					var col = player.playerMove % 3;
+					if (game.validMove(row, col)) {
+						removeHumanMoveEventListener();
+						game.updateBoard(row, col, outerThis.token);
+						player.playerMove = null;
+						game.nextTurn();
+					} else {
+						outerThis.waitForHumanToMakeMove();
+					}
+				}, stateVars);
+			});
+		}
+
+		function playMove() {
+			this.addHumanMoveEventListener();
+			this.waitForHumanToMakeMove();
+		}
+
+	}
+
+	class Ai: AbstractPlayer {
+
+		function this(token) {
+			super(token);
+		}
+
+
+		function stringify(board) {
+			var strBoard = "";
+			for(var row = 0; row < game.BOARD_HEIGHT; row++) {
+				for(var col = 0; col < game.BOARD_WIDTH; col++) {
+					strBoard += game.board[row][col];
+				}
+			}
+			return strBoard;
+		}
+
+		function playMove() {
+			var bestMove = view.get_best_move(this.stringify(game.board), this.token);			
+			game.updateBoard(bestMove[0], bestMove[1], this.token);
+			game.nextTurn();
+		}
+
+	}
+
+}

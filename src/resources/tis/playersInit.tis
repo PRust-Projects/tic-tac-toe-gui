@@ -1,0 +1,117 @@
+include("game.tis");
+include("utils.tis");
+
+namespace playersInit {
+
+	function determinePlayers() {
+		checkIfUserWantToPlayAgainstAI();
+	}
+
+	function setPlayers(typeOne, tokenOne, typeTwo, tokenTwo) {
+		if (typeOne == "human" && typeTwo == "human") {
+			game.players = [new player.Human(tokenOne), new player.Human(tokenTwo)];	
+		} else if (typeOne == "ai" && typeTwo == "human") {
+			game.players = [new player.Ai(tokenOne), new player.Human(tokenTwo)];
+		} else if (typeOne == "human" && typeTwo == "ai") {
+			game.players = [new player.Human(tokenOne), new player.Ai(tokenTwo)];
+		}
+	}
+
+	function checkIfUserWantToPlayAgainstAI() {
+		var stateVars = {"calledFunction": false, "result": null};
+		view.msgbox {
+			type: #question,
+			title: " ",
+			content: "Want to play against an AI?",
+			buttons: [
+				{id: #yes, text: "Yes", role: "default-button"},
+				{id: #no, text: "No"}
+			],
+			onClose: function(root, pressedButton) {
+				stateVars["result"] = pressedButton;
+				return true;
+			}
+		};
+		self.timer(500ms, function() {
+			return utils.executeIfOptionSelected("yes", userDoesWishToPlayAgainstAI, 
+			                               "no", userDoesNotWishToPlayAgainstAI, stateVars);
+		});
+	}
+	
+	function userDoesWishToPlayAgainstAI() {
+		var stateVars = {"calledFunction": false, "result": null};
+		view.msgbox {
+			type: #question,
+			title: " ",
+			content: "Do you want to go first?",
+			buttons: [
+				{id: #yes, text: "Yes", role: "default-button"},
+				{id: #no, text: "No"}
+			],
+			onClose: function(root, pressedButton) {
+				stateVars["result"] = pressedButton;
+				return true;
+			}
+		};
+		self.timer(50ms, function() {
+			return utils.executeIfOptionSelected("yes", userDoesWishToGoFirst, "no", userDoesNotWishToGoFirst, stateVars);
+		});
+	}
+	
+	function userDoesWishToGoFirst() {
+		var stateVars = {"calledFunction": false, "result": null};
+		view.msgbox {
+			type: #question,
+			title: " ",
+			content: "What token do you want?",
+			buttons: [
+				{id: #x, text: "X", role: "default-button"},
+				{id: #o, text: "O"}
+			],
+			onClose: function(root, pressedButton) {
+				stateVars["result"] = pressedButton;
+				return true;
+			}
+		};
+		self.timer(50ms, function() {
+			return utils.executeIfOptionSelected("x", function() {
+				setPlayers("human", "x", "ai", "o");
+			}, "o", function() {
+				setPlayers("human", "o", "ai", "x");
+			}, stateVars);
+		});
+	}
+	
+	function userDoesNotWishToGoFirst() {
+		if (rand(100) < 50) {
+			setPlayers("ai", "x", "human", "o");
+		} else {
+			setPlayers("ai", "o", "human", "x");
+		}
+	}
+	
+	function userDoesNotWishToPlayAgainstAI() {
+		var stateVars = {"calledFunction": false, "result": null};
+		view.msgbox {
+			type: #question,
+			title: " ",
+			content: "What token should the first player uses?",
+			buttons: [
+				{id: #x, text: "X", role: "default-button"},
+				{id: #o, text: "O"}
+			],
+			onClose: function(root, pressedButton) {
+				stateVars["result"] = pressedButton;
+				return true;
+			}
+		};
+		self.timer(50ms, function() {
+			return utils.executeIfOptionSelected("x", function() {
+				setPlayers("human", "x", "human", "o");
+			}, "o", function() {
+				setPlayers("human", "o", "human", "x");
+			}, stateVars);
+		});
+	}
+	
+}

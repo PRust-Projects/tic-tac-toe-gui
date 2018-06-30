@@ -1,0 +1,107 @@
+include("player.tis");
+include("playersInit.tis");
+include("utils.tis");
+
+namespace game {
+
+	const BOARD_HEIGHT = 3;
+	const BOARD_WIDTH = 3;
+
+	var board = [[" ", " ", " "],
+	             [" ", " ", " "],
+				 [" ", " ", " "]];
+	var grid = self.selectAll(".grid-cell");
+	var players;
+	var turn = 0;
+	
+	function attachEventListenerToGridCell(gridCell) {
+		gridCell.onClick = function() {
+			this.style.set {
+				background-image: "url(resources/images/x.png)";
+			}
+		};
+	}
+
+	function initBoard() {
+		for (var gridCell in grid) {
+			gridCell.style.set {
+				background-image: "url(resources/images/empty.png)";
+			};	
+		}
+	}
+
+	function updateBoard(row, col, token) {
+		board[row][col] = token;
+		grid[BOARD_HEIGHT * row + col].style.set {
+			background-image: "url(resources/images/" + token.toLowerCase() + ".png)";
+		};	
+	}
+	
+	function setupGame() {
+		initBoard();
+		playersInit.determinePlayers();
+		self.timer(50ms, function() {
+			return utils.executeIfNotNull(players, startGame, {"calledFunction": false});
+		});
+	}
+	
+	function startGame() {
+		stdout.println("Starting game!");
+		players[turn].playMove();
+	}
+
+	function nextTurn() {
+		if (someoneWon()) {
+			view.msgbox {
+				type: #information,
+				title: "Game Over",
+				content: (players[turn].token).toUpperCase() + " has won!",
+				buttons: [
+					{id: #ok, text: "Ok", role: "cancel-button"}
+				]
+			};
+			return;
+		} else if (isFilled()) {
+			view.msgbox {
+				type: #information,
+				title: "Game Over",
+				content: "The game has ended in a tie!",
+				buttons: [
+					{id: #ok, text: "Ok", role: "cancel-button"}
+				]
+			}
+			return;
+		}
+		turn = 1 - turn;
+		players[turn].playMove();
+	}
+
+	function someoneWon() {
+        return board[0][0] != " " && board[0][0] == board[0][1] && board[0][0] == board[0][2] || 
+            board[1][0] != " " && board[1][0] == board[1][1] && board[1][0] == board[1][2] ||
+            board[2][0] != " " && board[2][0] == board[2][1] && board[2][0] == board[2][2] ||
+            board[0][0] != " " && board[0][0] == board[1][0] && board[0][0] == board[2][0] ||
+            board[0][1] != " " && board[0][1] == board[1][1] && board[0][1] == board[2][1] ||
+            board[0][2] != " " && board[0][2] == board[1][2] && board[0][2] == board[2][2] ||
+            board[0][0] != " " && board[0][0] == board[1][1] && board[0][0] == board[2][2] ||
+            board[2][0] != " " && board[2][0] == board[1][1] && board[2][0] == board[0][2]
+	}
+
+	function isFilled() {
+		for(var row = 0; row < BOARD_HEIGHT; row++) {
+			for (var col = 0; col < BOARD_WIDTH; col++) {
+				if (board[row][col] == " ") {
+					return false;
+				}				
+			}
+		}
+		return true;
+	}
+
+	function validMove(row, col) {
+		return board[row][col] == " ";
+	}
+
+}
+
+game.setupGame();

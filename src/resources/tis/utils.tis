@@ -1,0 +1,33 @@
+namespace utils {
+
+	function executeIfNotNull(valueToTest, functionToRun, stateVars) {
+		if (stateVars["calledFunction"]) {
+			return false;
+		}
+		if (valueToTest === null || valueToTest === undefined) {
+			return true;
+		} else {
+			stateVars["calledFunction"] = true;
+			functionToRun();
+			return false;
+		}
+	}
+
+	function executeIfOptionSelected(optionOne, optionOneFunction, optionTwo, optionTwoFunction, stateVars) {
+		if (stateVars["calledFunction"]) {
+			return false;
+		}	
+		if (stateVars["result"] == null) {
+			return true;
+		} else if (stateVars["result"] == optionOne) {
+			stateVars["calledFunction"] = true;
+			optionOneFunction();
+			return false;
+		} else {
+			stateVars["calledFunction"] = true;
+			optionTwoFunction();
+			return false;
+		}
+	}
+
+}
