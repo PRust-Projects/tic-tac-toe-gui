@@ -14,18 +14,10 @@ namespace game {
 	var players;
 	var turn = 0;
 	
-	function attachEventListenerToGridCell(gridCell) {
-		gridCell.onClick = function() {
-			this.style.set {
-				background-image: "url(resources/images/x.png)";
-			}
-		};
-	}
-
 	function initBoard() {
 		for (var gridCell in grid) {
 			gridCell.style.set {
-				background-image: "url(resources/images/empty.png)";
+				background-image: "url(this://app/images/empty.png)";
 			};	
 		}
 	}
@@ -33,7 +25,7 @@ namespace game {
 	function updateBoard(row, col, token) {
 		board[row][col] = token;
 		grid[BOARD_HEIGHT * row + col].style.set {
-			background-image: "url(resources/images/" + token.toLowerCase() + ".png)";
+			background-image: "url(this://app/images/" + token.toLowerCase() + ".png)";
 		};	
 	}
 	
